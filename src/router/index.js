@@ -17,8 +17,13 @@ const routes = [
       },
       {
         path: 'my',
-        name: 'index-my',
+        name: 'my',
         component: () => import('../views/index/my.vue'),
+      },
+      {
+        path: 'processes',
+        name: 'processes',
+        component: () => import('../views/index/processes.vue'),
       },
     ],
   },
@@ -31,6 +36,11 @@ const routes = [
     path: '/test',
     name: 'test',
     component: () => import('../views/test.vue'),
+  },
+  {
+    path: '/submit',
+    name: 'submit',
+    component: () => import('../views/submit.vue'),
   },
 ];
 

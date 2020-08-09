@@ -1,7 +1,7 @@
 <template>
   <div>
     <van-nav-bar
-      title="我的"
+      title="处理"
       fixed
     />
     <base-page>
@@ -13,19 +13,10 @@
         v-model="activeTab"
         color="#1989fa"
       >
-        <van-tab title="全部">
+        <van-tab title="指派给我">
           <van-empty description="暂无数据" />
         </van-tab>
-        <van-tab title="处理中">
-          <van-empty description="暂无数据" />
-        </van-tab>
-        <van-tab title="已完成">
-          <van-empty description="暂无数据" />
-        </van-tab>
-        <van-tab title="已评价">
-          <van-empty description="暂无数据" />
-        </van-tab>
-        <van-tab title="已关闭">
+        <van-tab title="我的协作">
           <van-empty description="暂无数据" />
         </van-tab>
       </van-tabs>
