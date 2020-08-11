@@ -1,6 +1,6 @@
 module.exports = {
   productionSourceMap: false,
-  // publicPath: '/evaluation/',
+  publicPath: '/malfunctionReporting/',
   devServer: {
     proxy: {
       '/api/': {
