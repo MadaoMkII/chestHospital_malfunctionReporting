@@ -5,6 +5,15 @@
       fixed
     />
     <base-page>
+      <button @click="getTest">
+        Get Test
+      </button>
+      <button @click="setTest">
+        Set Test
+      </button>
+      <button @click="clearTest">
+        Clear Test
+      </button>
       <div class="s-list">
         <div
           class="s-list__item"
@@ -145,6 +154,58 @@ export default {
         message: '报修申告处理完毕后，请务必填写评价，否则将无法再次申告，谢谢。',
         confirmButtonText: '知道啦',
       });
+    },
+    async clearTest() {
+      const response = await this.$axios.get('/api/malfunctionReporting/getMalfunctionCatalog');
+      for (let i = 0; i < response.data.data.length; i += 1) {
+        console.log(response.data.data[i]);
+        // eslint-disable-next-line no-await-in-loop
+        await this.$axios.post('/api/malfunctionReporting/setMalfunctionCatalog', {
+          id: response.data.data[i].id,
+        });
+      }
+    },
+    async getTest() {
+      const response = await this.$axios.get('/api/malfunctionReporting/getMalfunctionCatalog');
+      for (let i = 0; i < response.data.data.length; i += 1) {
+        console.log(response.data.data[i]);
+        // // eslint-disable-next-line no-await-in-loop
+        // await this.$axios.post('/api/malfunctionReporting/setMalfunctionCatalog', {
+        //   id: response.data.data[i].id,
+        // });
+      }
+    },
+    async setTest() {
+      for (let i = 0; i < 2; i += 1) {
+        // eslint-disable-next-line no-await-in-loop
+        await this.$axios.post('/api/malfunctionReporting/setMalfunctionCatalog', {
+          id: `${i}`,
+          principalsUserId: ['DaiHuiKanWoLianSeHangShi'],
+          name: `一级目录${i}`,
+          category: '总务科',
+          // parentId: '2',
+        });
+        for (let j = 0; j < 3; j += 1) {
+          // eslint-disable-next-line no-await-in-loop
+          await this.$axios.post('/api/malfunctionReporting/setMalfunctionCatalog', {
+            id: `${i}-${j}`,
+            principalsUserId: ['DaiHuiKanWoLianSeHangShi'],
+            name: `二级目录${j}`,
+            category: '总务科',
+            parentId: `${i}`,
+          });
+          for (let k = 0; k < 2; k += 1) {
+            // eslint-disable-next-line no-await-in-loop
+            await this.$axios.post('/api/malfunctionReporting/setMalfunctionCatalog', {
+              id: `${i}-${j}-${k}`,
+              principalsUserId: ['DaiHuiKanWoLianSeHangShi'],
+              name: `三级目录${k}`,
+              category: '总务科',
+              parentId: `${i}-${j}`,
+            });
+          }
+        }
+      }
     },
   },
 };

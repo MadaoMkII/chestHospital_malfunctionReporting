@@ -1,14 +1,20 @@
 import Vue from 'vue';
 import BasePage from './BasePage.vue';
-import ServiceItem from './ServiceItem.vue';
+import TicketItem from './TicketItem.vue';
+import TicketTag from './TicketTag.vue';
 
 Vue.component('BasePage', BasePage);
-Vue.component('ServiceItem', ServiceItem);
+Vue.component('TicketItem', TicketItem);
+Vue.component('TicketTag', TicketTag);
 
 export {
   BasePage,
+  TicketItem,
+  TicketTag,
 };
 
 export default {
   BasePage,
+  TicketItem,
+  TicketTag,
 };

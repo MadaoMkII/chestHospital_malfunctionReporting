@@ -1,18 +1,22 @@
 <template>
-  <div class="service-item">
+  <div
+    class="service-item"
+    @click="$router.push({ name: 'tickets-id', params: { id: data.uuid } })"
+  >
     <div class="service-item__title van-hairline--bottom">
-      需要维修办公电脑<div class="service-item__title__tag">
-        未分配
-      </div>
+      {{ data.title }}
+      <ticket-tag :status="data.status">
+        {{ data.status }}
+      </ticket-tag>
     </div>
     <div class="service-item__body">
       <div class="service-item__sub">
-        服务项目：日常办公电脑维修
+        服务项目：接口未提供
       </div>
       <div class="service-item__sub">
         受理人：无<div class="service-item__sub__datetime">
-        2020.6.31  11:26
-      </div>
+          2020.6.31  11:26
+        </div>
       </div>
     </div>
   </div>
@@ -20,7 +24,12 @@
 
 <script>
 export default {
-
+  props: {
+    data: {
+      type: Object,
+      required: true,
+    },
+  },
 };
 </script>
 
@@ -40,18 +49,6 @@ export default {
     font-weight:600;
     color:rgba(51,51,51,1);
     word-break: break-all;
-    &__tag {
-      flex-shrink: 0;
-      font-size:10px;
-      font-weight:400;
-      color:rgba(255,255,255,1);
-      background:rgba(153,153,153,1);
-      border-radius:2px;
-      line-height: 20px;
-      padding-left: 5px;
-      padding-right: 5px;
-      margin-left: 5px;
-    }
   }
   &__body {
    padding: 5px 15px;

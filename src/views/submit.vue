@@ -18,7 +18,7 @@
             :value="service"
             label="服务项目"
             placeholder="点击选择服务项目"
-            :rules="[{ required: true, message: '服务项目不能不选' }]"
+            @click="$router.push({ name: 'service-selector' })"
           />
           <van-field
             required
@@ -53,7 +53,7 @@
           />
           <van-field
             required
-            name="uploader"
+            name="附件"
             label="附件上传"
           >
             <template #input>
@@ -112,8 +112,17 @@ export default {
     };
   },
   methods: {
-    onSubmit(values) {
+    async onSubmit(values) {
       console.log('submit', values);
+      const response = await this.$axios.post('/api/malfunctionReporting/createMalfunctionReporting', {
+        title: values['标题'],
+        content: values['故障描述'],
+        category: this.$route.query.department,
+        deviceName: values['设备名称'],
+        priority: values['优先级'],
+        malfunctionCatalogId: '0-0-0',
+      });
+      console.log(response);
     },
     onPriorityPickerConfirm(priority) {
       this.priority = priority;
