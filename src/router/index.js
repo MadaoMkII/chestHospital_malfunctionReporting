@@ -50,7 +50,17 @@ const routes = [
   {
     path: '/tickets/:id',
     name: 'tickets-id',
-    component: () => import('../views/tickets/_id.vue'),
+    component: () => import('../views/tickets/_id/index.vue'),
+  },
+  {
+    path: '/tickets/:id/cooperation-user-selector/:departmentId',
+    name: 'tickets-id-cooperation-user-selector-department-id',
+    component: () => import('../views/tickets/_id/cooperation-user-selector/_departmentId.vue'),
+  },
+  {
+    path: '/tickets/:id/principal-user-selector/:departmentId',
+    name: 'tickets-id-principal-user-selector-department-id',
+    component: () => import('../views/tickets/_id/principal-user-selector/_departmentId.vue'),
   },
 ];
 

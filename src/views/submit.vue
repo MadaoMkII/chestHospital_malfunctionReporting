@@ -113,16 +113,28 @@ export default {
   },
   methods: {
     async onSubmit(values) {
-      console.log('submit', values);
-      const response = await this.$axios.post('/api/malfunctionReporting/createMalfunctionReporting', {
-        title: values['标题'],
-        content: values['故障描述'],
-        category: this.$route.query.department,
-        deviceName: values['设备名称'],
-        priority: values['优先级'],
-        malfunctionCatalogId: '0-0-0',
-      });
-      console.log(response);
+      if (this.isLoading) return;
+      try {
+        this.isLoading = true;
+        await this.$axios.post('/api/malfunctionReporting/createMalfunctionReporting', {
+          title: values['标题'],
+          content: values['故障描述'],
+          category: this.$route.query.department,
+          deviceName: values['设备名称'],
+          priority: values['优先级'],
+          malfunctionCatalogId: '0-0-0',
+        });
+        this.$notify({ type: 'success', message: '工单提交成功' });
+        this.$router.push({ name: 'my' });
+      } catch (e) {
+        if (e.response.data && e.response.data.message) {
+          this.$notify({ type: 'danger', message: e.response.data.message });
+        } else {
+          this.$notify({ type: 'danger', message: '请求失败，服务器发生错误' });
+        }
+      } finally {
+        this.isLoading = false;
+      }
     },
     onPriorityPickerConfirm(priority) {
       this.priority = priority;

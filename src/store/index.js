@@ -8,6 +8,7 @@ export default new Vuex.Store({
   state: {
     user: null,
     config: null,
+    cooperationUserList: [],
     strict: true,
   },
   mutations: {
@@ -16,6 +17,9 @@ export default new Vuex.Store({
     },
     setConfig(state, config) {
       state.config = config;
+    },
+    setCooperationUserList(state, userList) {
+      state.cooperationUserList = userList;
     },
   },
   actions: {

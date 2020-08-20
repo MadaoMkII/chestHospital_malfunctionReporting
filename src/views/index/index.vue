@@ -5,15 +5,15 @@
       fixed
     />
     <base-page>
-      <button @click="getTest">
-        Get Test
-      </button>
-      <button @click="setTest">
-        Set Test
-      </button>
-      <button @click="clearTest">
-        Clear Test
-      </button>
+      <!--      <button @click="getTest">-->
+      <!--        Get Test-->
+      <!--      </button>-->
+      <!--      <button @click="setTest">-->
+      <!--        Set Test-->
+      <!--      </button>-->
+      <!--      <button @click="clearTest">-->
+      <!--        Clear Test-->
+      <!--      </button>-->
       <div class="s-list">
         <div
           class="s-list__item"
