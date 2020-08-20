@@ -18,7 +18,7 @@
             :value="service"
             label="服务项目"
             placeholder="点击选择服务项目"
-            @click="$router.push({ name: 'service-selector' })"
+            @click="$router.push({ name: 'service-selector', query: { category: $route.query.department } })"
           />
           <van-field
             required

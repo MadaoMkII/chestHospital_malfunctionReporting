@@ -8,9 +8,10 @@
     />
     <base-page :no-bottom="isNoBottom">
       <pre style="overflow: auto">
-        isMaintenanceAdministrator: {{ isMaintenanceAdministrator }}
-        isTicketAdministrator: {{ isTicketAdministrator }}
-        isSubmitter: {{ isSubmitter }}
+        是否为服务项目负责人: {{ isMaintenanceAdministrator }}
+        是否为工单管理员: {{ isTicketAdministrator }}
+        是否为提交人: {{ isSubmitter }}
+        是否为协作者: {{ isHelper }}
       </pre>
       <div class="ticket-card">
         <div class="ticket-card__header van-hairline--bottom">
@@ -38,7 +39,7 @@
               设备名称
             </div>
             <div class="ticket-item__value">
-              接口未提供
+              {{ ticket.deviceName }}
             </div>
           </div>
           <div class="ticket-item ticket-item--full">
@@ -166,6 +167,22 @@
                 clickable
                 text="处理"
                 @click="showFinishTicketForm = true"
+              />
+            </van-grid>
+          </div>
+        </template>
+      </template>
+      <template v-else-if="isHelper">
+        <template v-if="ticket.status === '未接单' || ticket.status === '处理中'">
+          <div class="submit-bar">
+            <van-grid
+              clickable
+              :column-num="1"
+            >
+              <van-grid-item
+                clickable
+                text="回复"
+                @click="showReplayTicketForm = true"
               />
             </van-grid>
           </div>
@@ -387,6 +404,10 @@ export default {
     isSubmitter() { // 我是不是提交人
       return this.ticket.creator.USERID === this.user.USERID;
     },
+    isHelper() {
+      const userFound = this.ticket.assistant.find((user) => user.USERID === this.user.USERID);
+      return userFound !== undefined;
+    },
     isNoBottom() {
       if (this.isMaintenanceAdministrator) {
         if (this.ticket.status === '未接单' || this.ticket.status === '处理中') {
@@ -394,6 +415,10 @@ export default {
         }
       } else if (this.isTicketAdministrator) {
         if (this.ticket.status === '处理中') {
+          return false;
+        }
+      } else if (this.isHelper) {
+        if (this.ticket.status === '未接单' || this.ticket.status === '处理中' || this.ticket.status === '已完成') {
           return false;
         }
       } else if (this.isSubmitter) {
@@ -421,13 +446,13 @@ export default {
     async fetchTicket(params) {
       const response = await this.$axios.post('/api/malfunctionReporting/getMalfunctionReportingDetail', params);
       return Object.assign(response.data.data, {
-        candidate_supervisors: [{
-          USERID: 'DaiHuiKanWoLianSeHangShi',
-          apartmentCode: '1',
-          apartmentName: '天津实境科技有限公司',
-          avatar: 'http://wework.qpic.cn/bizmail/F335CVtyNWTeWcBpUPkw2TchpRytoaOOPIlYR1S23tQnicEpbJEo9Bw/0',
-          nickName: '待会看我脸色行事噢',
-        }],
+        // candidate_supervisors: [{
+        //   USERID: 'DaiHuiKanWoLianSeHangShi',
+        //   apartmentCode: '1',
+        //   apartmentName: '天津实境科技有限公司',
+        //   avatar: 'http://wework.qpic.cn/bizmail/F335CVtyNWTeWcBpUPkw2TchpRytoaOOPIlYR1S23tQnicEpbJEo9Bw/0',
+        //   nickName: '待会看我脸色行事噢',
+        // }],
         // principal: {
         //   USERID: 'DaiHuiKanWoLianSeHangShi',
         //   apartmentCode: '1',
@@ -467,14 +492,13 @@ export default {
       }).catch(() => {});
     },
     async onOperationHistoryLoad() {
-      const { data } = await this.fetchOperationHistoryList({
+      const { data, totalCount } = await this.fetchOperationHistoryList({
         uuid: this.$route.params.id,
-        unit: 1000,
+        unit: 15,
         page: this.operationHistoryPage,
       });
-      const total = data.length;
       this.operationHistoryList.push(...data);
-      this.operationHistoryTotal = total;
+      this.operationHistoryTotal = totalCount;
       this.operationHistoryPage += 1;
       this.operationHistoryLoading = false;
       if (this.operationHistoryList.length === this.operationHistoryTotal) {

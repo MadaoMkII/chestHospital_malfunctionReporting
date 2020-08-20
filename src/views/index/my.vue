@@ -183,7 +183,7 @@ export default {
   },
   methods: {
     async fetchList(params) {
-      const response = await this.$axios.post('/api/malfunctionReporting/getMalfunctionReportingList', params);
+      const response = await this.$axios.post('/api/malfunctionReporting/getMyMalfunctionReportingList', params);
       return {
         data: response.data.data,
         total: response.data.totalCount,
@@ -215,7 +215,7 @@ export default {
       this.loading = true;
       this.finished = false;
       this.$router.push({
-        name: 'processes',
+        name: 'my',
         query: {
           keywords: this.keywords ? this.keywords : undefined,
           tab: this.tab,
@@ -230,7 +230,7 @@ export default {
       this.finished = false;
       this.isDirty = false;
       this.$router.push({
-        name: 'processes',
+        name: 'my',
         query: {
           keywords: this.keywords ? this.keywords : undefined,
           tab: this.tab,
@@ -250,7 +250,7 @@ export default {
     },
     onTabClick() {
       this.$router.push({
-        name: 'processes',
+        name: 'my',
         query: {
           keywords: this.keywords ? this.keywords : undefined,
           tab: this.tab,
