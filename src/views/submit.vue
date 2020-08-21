@@ -15,14 +15,15 @@
             readonly
             clickable
             name="服务项目"
-            :value="service"
+            :value="ticketForm.service ? ticketForm.service.name : ''"
             label="服务项目"
             placeholder="点击选择服务项目"
+            :rules="[{ required: true, message: '服务项目不能不选' }]"
             @click="$router.push({ name: 'service-selector', query: { category: $route.query.department } })"
           />
           <van-field
             required
-            v-model="title"
+            v-model="ticketForm.title"
             name="标题"
             label="标题"
             placeholder="请输入标题"
@@ -31,7 +32,7 @@
           />
           <van-field
             required
-            v-model="device"
+            v-model="ticketForm.device"
             name="设备名称"
             label="设备名称"
             placeholder="请输入故障设备或部位名称"
@@ -40,7 +41,7 @@
           />
           <van-field
             required
-            v-model="description"
+            v-model="ticketForm.description"
             name="故障描述"
             label="故障描述"
             placeholder="请输入故障描述"
@@ -57,7 +58,7 @@
             label="附件上传"
           >
             <template #input>
-              <van-uploader v-model="uploader" />
+              <van-uploader v-model="ticketForm.files" />
             </template>
           </van-field>
           <van-field
@@ -66,7 +67,7 @@
             readonly
             clickable
             name="优先级"
-            :value="priority"
+            :value="ticketForm.priority"
             label="优先级"
             placeholder="点击选择优先级"
             @click="showPriorityPicker = true"
@@ -101,15 +102,32 @@
 export default {
   data() {
     return {
-      service: '',
-      title: '',
-      device: '',
-      description: '',
-      uploader: [{ url: 'https://img.yzcdn.cn/vant/leaf.jpg' }],
-      priority: '',
       showPriorityPicker: false,
       priorityPickerColumns: ['普通', '重要不紧急', '紧急不重要', '重要且紧急'],
     };
+  },
+  computed: {
+    ticketForm: {
+      set(value) {
+        this.$store.commit('setTicketForm', value);
+      },
+      get() {
+        return this.$store.state.ticketForm;
+      },
+    },
+  },
+  beforeRouteLeave(to, from, next) {
+    if (to.name !== 'service-selector') {
+      this.ticketForm = {
+        service: null,
+        title: '',
+        device: '',
+        description: '',
+        files: [],
+        priority: '',
+      };
+    }
+    next();
   },
   methods: {
     async onSubmit(values) {
@@ -122,8 +140,16 @@ export default {
           category: this.$route.query.department,
           deviceName: values['设备名称'],
           priority: values['优先级'],
-          malfunctionCatalogId: '0-0-0',
+          malfunctionCatalogId: this.ticketForm.service.id,
         });
+        this.ticketForm = {
+          service: null,
+          title: '',
+          device: '',
+          description: '',
+          files: [],
+          priority: '',
+        };
         this.$notify({ type: 'success', message: '工单提交成功' });
         this.$router.push({ name: 'my' });
       } catch (e) {
@@ -137,7 +163,7 @@ export default {
       }
     },
     onPriorityPickerConfirm(priority) {
-      this.priority = priority;
+      this.ticketForm.priority = priority;
       this.showPriorityPicker = false;
     },
   },

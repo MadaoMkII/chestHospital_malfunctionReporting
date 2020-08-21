@@ -10,6 +10,14 @@ export default new Vuex.Store({
     config: null,
     cooperationUserList: [],
     strict: true,
+    ticketForm: {
+      service: null,
+      title: '',
+      device: '',
+      description: '',
+      files: [],
+      priority: '',
+    },
   },
   mutations: {
     setUser(state, user) {
@@ -20,6 +28,9 @@ export default new Vuex.Store({
     },
     setCooperationUserList(state, userList) {
       state.cooperationUserList = userList;
+    },
+    setTicketForm(state, ticketForm) {
+      state.ticketForm = ticketForm;
     },
   },
   actions: {

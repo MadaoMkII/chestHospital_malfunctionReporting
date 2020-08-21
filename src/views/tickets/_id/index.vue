@@ -140,6 +140,20 @@
             </van-grid>
           </div>
         </template>
+        <template v-else-if="ticket.status === '已完成' && isSubmitter">
+          <div class="submit-bar">
+            <van-grid
+              clickable
+              :column-num="1"
+            >
+              <van-grid-item
+                clickable
+                text="评价"
+                @click="showEvaluationTicketForm = true"
+              />
+            </van-grid>
+          </div>
+        </template>
       </template>
       <template v-else-if="isTicketAdministrator">
         <template v-if="ticket.status === '处理中'">
@@ -167,6 +181,20 @@
                 clickable
                 text="处理"
                 @click="showFinishTicketForm = true"
+              />
+            </van-grid>
+          </div>
+        </template>
+        <template v-else-if="ticket.status === '已完成' && isSubmitter">
+          <div class="submit-bar">
+            <van-grid
+              clickable
+              :column-num="1"
+            >
+              <van-grid-item
+                clickable
+                text="评价"
+                @click="showEvaluationTicketForm = true"
               />
             </van-grid>
           </div>
@@ -410,11 +438,11 @@ export default {
     },
     isNoBottom() {
       if (this.isMaintenanceAdministrator) {
-        if (this.ticket.status === '未接单' || this.ticket.status === '处理中') {
+        if (this.ticket.status === '未接单' || this.ticket.status === '处理中' || (this.ticket.status === '已完成' && this.isSubmitter)) {
           return false;
         }
       } else if (this.isTicketAdministrator) {
-        if (this.ticket.status === '处理中') {
+        if (this.ticket.status === '处理中' || (this.ticket.status === '已完成' && this.isSubmitter)) {
           return false;
         }
       } else if (this.isHelper) {
