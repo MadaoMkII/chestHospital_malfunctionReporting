@@ -6,7 +6,7 @@
     />
     <base-page>
       <van-search
-        class="searchbar__search"
+        class="sticky-searchbar searchbar__search"
         v-model="keywords"
         placeholder="请输入搜索关键词"
         @search="onSearch"

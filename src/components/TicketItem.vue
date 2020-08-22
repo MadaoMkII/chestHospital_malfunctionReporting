@@ -11,11 +11,11 @@
     </div>
     <div class="service-item__body">
       <div class="service-item__sub">
-        服务项目：接口未提供
+        服务项目：{{ data.malfunctionCatalogName }}
       </div>
       <div class="service-item__sub">
-        受理人：无<div class="service-item__sub__datetime">
-          2020.6.31  11:26
+        受理人：{{ data.principal ? data.principal.nickName : '无' }}<div class="service-item__sub__datetime">
+          {{ moment(data.created_at).format('YYYY.MM.DD hh:mm') }}
         </div>
       </div>
     </div>
@@ -23,12 +23,19 @@
 </template>
 
 <script>
+import moment from 'moment';
+
 export default {
   props: {
     data: {
       type: Object,
       required: true,
     },
+  },
+  data() {
+    return {
+      moment,
+    };
   },
 };
 </script>

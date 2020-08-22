@@ -7,12 +7,12 @@
       @click-left="$router.back()"
     />
     <base-page :no-bottom="isNoBottom">
-      <pre style="overflow: auto">
-        是否为服务项目负责人: {{ isMaintenanceAdministrator }}
-        是否为工单管理员: {{ isTicketAdministrator }}
-        是否为提交人: {{ isSubmitter }}
-        是否为协作者: {{ isHelper }}
-      </pre>
+      <!--      <pre style="overflow: auto">-->
+      <!--        是否为服务项目负责人: {{ isMaintenanceAdministrator }}-->
+      <!--        是否为工单管理员: {{ isTicketAdministrator }}-->
+      <!--        是否为提交人: {{ isSubmitter }}-->
+      <!--        是否为协作者: {{ isHelper }}-->
+      <!--      </pre>-->
       <div class="ticket-card">
         <div class="ticket-card__header van-hairline--bottom">
           {{ ticket.title }}
@@ -72,12 +72,13 @@
             :finished="operationHistoryFinished"
             @load="onOperationHistoryLoad"
           >
-            <pre
-              class="van-hairline--bottom"
-              style="overflow: auto; margin: 0;"
-              v-for="(operationHistory, i) in operationHistoryList"
-              :key="i"
-            >{{ operationHistory }}</pre>
+            <div>
+              <operation-history-item
+                v-for="(operationHistory, i) in operationHistoryList"
+                :key="i"
+                :data="operationHistory"
+              />
+            </div>
           </van-list>
         </div>
       </div>
@@ -459,8 +460,6 @@ export default {
   },
   async created() {
     this.ticket = await this.fetchTicket({ uuid: this.$route.params.id });
-    console.log(this.ticket);
-    console.log(this.user);
   },
   methods: {
     async updateTicket() {
