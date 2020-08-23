@@ -4,12 +4,16 @@ import TicketItem from './TicketItem.vue';
 import TicketTag from './TicketTag.vue';
 import OperationHistoryItem from './OperationHistoryItem.vue';
 import RateText from './RateText.vue';
+import FormUploader from './FormUploader.vue';
+import RateTextSelector from './RateTextSelector.vue';
 
 Vue.component('BasePage', BasePage);
 Vue.component('TicketItem', TicketItem);
 Vue.component('TicketTag', TicketTag);
 Vue.component('OperationHistoryItem', OperationHistoryItem);
 Vue.component('RateText', RateText);
+Vue.component('FormUploader', FormUploader);
+Vue.component('RateTextSelector', RateTextSelector);
 
 export {
   BasePage,
@@ -17,6 +21,8 @@ export {
   TicketTag,
   OperationHistoryItem,
   RateText,
+  FormUploader,
+  RateTextSelector,
 };
 
 export default {
@@ -25,4 +31,6 @@ export default {
   TicketTag,
   OperationHistoryItem,
   RateText,
+  FormUploader,
+  RateTextSelector,
 };

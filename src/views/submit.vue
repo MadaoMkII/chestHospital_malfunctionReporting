@@ -53,12 +53,11 @@
             type="textarea"
           />
           <van-field
-            required
             name="附件"
-            label="附件上传"
+            label="附件"
           >
             <template #input>
-              <van-uploader v-model="ticketForm.files" />
+              <form-uploader v-model="ticketForm.fileList" />
             </template>
           </van-field>
           <van-field
@@ -103,7 +102,7 @@ export default {
   data() {
     return {
       showPriorityPicker: false,
-      priorityPickerColumns: ['普通', '重要不紧急', '紧急不重要', '重要且紧急'],
+      priorityPickerColumns: ['普通', '不紧急但重要', '紧急但不重要', '紧急且重要'],
     };
   },
   computed: {
@@ -123,7 +122,7 @@ export default {
         title: '',
         device: '',
         description: '',
-        files: [],
+        fileList: [],
         priority: '',
       };
     }
@@ -131,9 +130,17 @@ export default {
   },
   methods: {
     async onSubmit(values) {
+      if (this.ticketForm.fileList.find((file) => file.status === 'uploading') !== undefined) {
+        this.$notify({ type: 'danger', message: '附件正在上传，请等待上传完成再试' });
+        return;
+      }
       if (this.isLoading) return;
       try {
         this.isLoading = true;
+        const fileList = [];
+        for (let i = 0; i < values['附件'].length; i += 1) {
+          fileList.push({ media_id: values['附件'][i].mediaId, accessoryType: values['附件'][i].file.type });
+        }
         await this.$axios.post('/api/malfunctionReporting/createMalfunctionReporting', {
           title: values['标题'],
           content: values['故障描述'],
@@ -141,13 +148,14 @@ export default {
           deviceName: values['设备名称'],
           priority: values['优先级'],
           malfunctionCatalogId: this.ticketForm.service.id,
+          media_ids: fileList,
         });
         this.ticketForm = {
           service: null,
           title: '',
           device: '',
           description: '',
-          files: [],
+          fileList: [],
           priority: '',
         };
         this.$notify({ type: 'success', message: '工单提交成功' });

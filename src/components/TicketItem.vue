@@ -15,7 +15,7 @@
       </div>
       <div class="service-item__sub">
         受理人：{{ data.principal ? data.principal.nickName : '无' }}<div class="service-item__sub__datetime">
-          {{ moment(data.created_at).format('YYYY.MM.DD hh:mm') }}
+          {{ moment(data.created_at).format('YYYY.MM.DD HH:mm') }}
         </div>
       </div>
     </div>

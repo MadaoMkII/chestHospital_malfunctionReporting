@@ -15,7 +15,7 @@ export default new Vuex.Store({
       title: '',
       device: '',
       description: '',
-      files: [],
+      fileList: [],
       priority: '',
     },
   },

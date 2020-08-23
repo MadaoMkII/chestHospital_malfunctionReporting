@@ -14,7 +14,7 @@
           创建工单
         </div>
         <div class="opt-history-item__content__datetime">
-          {{ moment(data.created_at).format('YYYY.MM.DD hh:mm') }}
+          {{ moment(data.created_at).format('YYYY.MM.DD HH:mm') }}
         </div>
       </div>
       <div
@@ -25,7 +25,7 @@
           接取工单
         </div>
         <div class="opt-history-item__content__datetime">
-          {{ moment(data.created_at).format('YYYY.MM.DD hh:mm') }}
+          {{ moment(data.created_at).format('YYYY.MM.DD HH:mm') }}
         </div>
       </div>
       <div
@@ -38,7 +38,7 @@
           </div>
         </div>
         <div class="opt-history-item__content__datetime">
-          {{ moment(data.created_at).format('YYYY.MM.DD hh:mm') }}
+          {{ moment(data.created_at).format('YYYY.MM.DD HH:mm') }}
         </div>
       </div>
       <div
@@ -55,7 +55,7 @@
           </div> 添加为协作科室
         </div>
         <div class="opt-history-item__content__datetime">
-          {{ moment(data.created_at).format('YYYY.MM.DD hh:mm') }}
+          {{ moment(data.created_at).format('YYYY.MM.DD HH:mm') }}
         </div>
       </div>
       <template v-else-if="data.action === '回复'">
@@ -64,7 +64,7 @@
             回复
           </div>
           <div class="opt-history-item__content__datetime">
-            {{ moment(data.created_at).format('YYYY.MM.DD hh:mm') }}
+            {{ moment(data.created_at).format('YYYY.MM.DD HH:mm') }}
           </div>
         </div>
         <div class="opt-history-item__replay">
@@ -79,11 +79,13 @@
             </div>
           </div>
           <div class="opt-history-item__content__datetime">
-            {{ moment(data.created_at).format('YYYY.MM.DD hh:mm') }}
+            {{ moment(data.created_at).format('YYYY.MM.DD HH:mm') }}
           </div>
         </div>
         <div class="opt-history-item__replay">
-          处理结果：接口未提供<br>
+          处理结果：<div class="opt-history-item__content__text__user">
+            {{ data.detail.result }}
+          </div><br>
           {{ data.detail.content }}
         </div>
       </template>
@@ -93,7 +95,7 @@
             已评价工单
           </div>
           <div class="opt-history-item__content__datetime">
-            {{ moment(data.created_at).format('YYYY.MM.DD hh:mm') }}
+            {{ moment(data.created_at).format('YYYY.MM.DD HH:mm') }}
           </div>
         </div>
         <div class="opt-history-item__replay">
@@ -109,7 +111,7 @@
           {{ data.action }}
         </div>
         <div class="opt-history-item__content__datetime">
-          {{ moment(data.created_at).format('YYYY.MM.DD hh:mm') }}
+          {{ moment(data.created_at).format('YYYY.MM.DD HH:mm') }}
         </div>
       </div>
     </div>
@@ -159,7 +161,7 @@ export default {
       line-height: 20px;
       &__user {
         display: inline;
-        font-weight:600;
+        font-weight: bolder;
         color:rgba(51,51,51,1);
       }
     }

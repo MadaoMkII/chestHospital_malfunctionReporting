@@ -26,6 +26,8 @@ export default {
   right: 0;
   bottom: 50px;
   overflow: auto;
+  padding-bottom: constant(safe-area-inset-bottom);
+  padding-bottom: env(safe-area-inset-bottom);
 
   &--no-bottom {
     bottom: 0;

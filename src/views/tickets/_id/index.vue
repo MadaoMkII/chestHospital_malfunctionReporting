@@ -4,7 +4,7 @@
       title="工单处理"
       fixed
       left-arrow
-      @click-left="$router.back()"
+      @click-left="routerBack()"
     />
     <base-page :no-bottom="isNoBottom">
       <!--      <pre style="overflow: auto">-->
@@ -24,6 +24,14 @@
             </div>
             <div class="ticket-item__value">
               {{ `${ticket.creator.nickName}（${ticket.creator.apartmentName}）` }}
+            </div>
+          </div>
+          <div class="ticket-item">
+            <div class="ticket-item__label">
+              优先级
+            </div>
+            <div class="ticket-item__value">
+              {{ ticket.priority }}
             </div>
           </div>
           <div class="ticket-item">
@@ -82,172 +90,172 @@
           </van-list>
         </div>
       </div>
-      <template v-if="isMaintenanceAdministrator">
-        <template v-if="ticket.status === '未接单'">
-          <div class="submit-bar">
-            <van-grid
-              clickable
-              :column-num="4"
-            >
-              <van-grid-item
-                clickable
-                text="回复"
-                @click="showReplayTicketForm = true"
-              />
-              <van-grid-item
-                clickable
-                text="指派"
-                @click="$router.push({ name: 'tickets-id-principal-user-selector-department-id', params: { id: $route.params.id, departmentId: '1' } })"
-              />
-              <van-grid-item
-                clickable
-                text="协作"
-                @click="$router.push({ name: 'tickets-id-cooperation-user-selector-department-id', params: { id: $route.params.id, departmentId: '1' } })"
-              />
-              <van-grid-item
-                clickable
-                text="接单"
-                @click="takeTicket()"
-              />
-            </van-grid>
-          </div>
-        </template>
-        <template v-else-if="ticket.status === '处理中'">
-          <div class="submit-bar">
-            <van-grid
-              clickable
-              :column-num="4"
-            >
-              <van-grid-item
-                clickable
-                text="回复"
-                @click="showReplayTicketForm = true"
-              />
-              <van-grid-item
-                clickable
-                text="指派"
-                @click="$router.push({ name: 'tickets-id-principal-user-selector-department-id', params: { id: $route.params.id, departmentId: '1' } })"
-              />
-              <van-grid-item
-                clickable
-                text="协作"
-                @click="$router.push({ name: 'tickets-id-cooperation-user-selector-department-id', params: { id: $route.params.id, departmentId: '1' } })"
-              />
-              <van-grid-item
-                clickable
-                text="处理"
-                @click="showFinishTicketForm = true"
-              />
-            </van-grid>
-          </div>
-        </template>
-        <template v-else-if="ticket.status === '已完成' && isSubmitter">
-          <div class="submit-bar">
-            <van-grid
-              clickable
-              :column-num="1"
-            >
-              <van-grid-item
-                clickable
-                text="评价"
-                @click="showEvaluationTicketForm = true"
-              />
-            </van-grid>
-          </div>
-        </template>
-      </template>
-      <template v-else-if="isTicketAdministrator">
-        <template v-if="ticket.status === '处理中'">
-          <div class="submit-bar">
-            <van-grid
-              clickable
-              :column-num="4"
-            >
-              <van-grid-item
-                clickable
-                text="回复"
-                @click="showReplayTicketForm = true"
-              />
-              <van-grid-item
-                clickable
-                text="指派"
-                @click="$router.push({ name: 'tickets-id-principal-user-selector-department-id', params: { id: $route.params.id, departmentId: '1' } })"
-              />
-              <van-grid-item
-                clickable
-                text="协作"
-                @click="$router.push({ name: 'tickets-id-cooperation-user-selector-department-id', params: { id: $route.params.id, departmentId: '1' } })"
-              />
-              <van-grid-item
-                clickable
-                text="处理"
-                @click="showFinishTicketForm = true"
-              />
-            </van-grid>
-          </div>
-        </template>
-        <template v-else-if="ticket.status === '已完成' && isSubmitter">
-          <div class="submit-bar">
-            <van-grid
-              clickable
-              :column-num="1"
-            >
-              <van-grid-item
-                clickable
-                text="评价"
-                @click="showEvaluationTicketForm = true"
-              />
-            </van-grid>
-          </div>
-        </template>
-      </template>
-      <template v-else-if="isHelper">
-        <template v-if="ticket.status === '未接单' || ticket.status === '处理中'">
-          <div class="submit-bar">
-            <van-grid
-              clickable
-              :column-num="1"
-            >
-              <van-grid-item
-                clickable
-                text="回复"
-                @click="showReplayTicketForm = true"
-              />
-            </van-grid>
-          </div>
-        </template>
-      </template>
-      <template v-else-if="isSubmitter">
-        <template v-if="ticket.status === '未接单' || ticket.status === '处理中'">
-          <div class="submit-bar">
-            <van-grid
-              clickable
-              :column-num="1"
-            >
-              <van-grid-item
-                clickable
-                text="回复"
-                @click="showReplayTicketForm = true"
-              />
-            </van-grid>
-          </div>
-        </template>
-        <template v-else-if="ticket.status === '已完成'">
-          <div class="submit-bar">
-            <van-grid
-              clickable
-              :column-num="1"
-            >
-              <van-grid-item
-                clickable
-                text="评价"
-                @click="showEvaluationTicketForm = true"
-              />
-            </van-grid>
-          </div>
-        </template>
-      </template>
     </base-page>
+    <template v-if="isMaintenanceAdministrator">
+      <template v-if="ticket.status === '未接单'">
+        <div class="submit-bar">
+          <van-grid
+            clickable
+            :column-num="4"
+          >
+            <van-grid-item
+              clickable
+              text="回复"
+              @click="showReplayTicketForm = true"
+            />
+            <van-grid-item
+              clickable
+              text="指派"
+              @click="$router.push({ name: 'tickets-id-principal-user-selector-department-id', params: { id: $route.params.id, departmentId: '1' } })"
+            />
+            <van-grid-item
+              clickable
+              text="协作"
+              @click="$router.push({ name: 'tickets-id-cooperation-user-selector-department-id', params: { id: $route.params.id, departmentId: '1' } })"
+            />
+            <van-grid-item
+              clickable
+              text="接单"
+              @click="takeTicket()"
+            />
+          </van-grid>
+        </div>
+      </template>
+      <template v-else-if="ticket.status === '处理中'">
+        <div class="submit-bar">
+          <van-grid
+            clickable
+            :column-num="4"
+          >
+            <van-grid-item
+              clickable
+              text="回复"
+              @click="showReplayTicketForm = true"
+            />
+            <van-grid-item
+              clickable
+              text="指派"
+              @click="$router.push({ name: 'tickets-id-principal-user-selector-department-id', params: { id: $route.params.id, departmentId: '1' } })"
+            />
+            <van-grid-item
+              clickable
+              text="协作"
+              @click="$router.push({ name: 'tickets-id-cooperation-user-selector-department-id', params: { id: $route.params.id, departmentId: '1' } })"
+            />
+            <van-grid-item
+              clickable
+              text="处理"
+              @click="showFinishTicketForm = true"
+            />
+          </van-grid>
+        </div>
+      </template>
+      <template v-else-if="ticket.status === '已完成' && isSubmitter">
+        <div class="submit-bar">
+          <van-grid
+            clickable
+            :column-num="1"
+          >
+            <van-grid-item
+              clickable
+              text="评价"
+              @click="showEvaluationTicketForm = true"
+            />
+          </van-grid>
+        </div>
+      </template>
+    </template>
+    <template v-else-if="isTicketAdministrator">
+      <template v-if="ticket.status === '处理中'">
+        <div class="submit-bar">
+          <van-grid
+            clickable
+            :column-num="4"
+          >
+            <van-grid-item
+              clickable
+              text="回复"
+              @click="showReplayTicketForm = true"
+            />
+            <van-grid-item
+              clickable
+              text="指派"
+              @click="$router.push({ name: 'tickets-id-principal-user-selector-department-id', params: { id: $route.params.id, departmentId: '1' } })"
+            />
+            <van-grid-item
+              clickable
+              text="协作"
+              @click="$router.push({ name: 'tickets-id-cooperation-user-selector-department-id', params: { id: $route.params.id, departmentId: '1' } })"
+            />
+            <van-grid-item
+              clickable
+              text="处理"
+              @click="showFinishTicketForm = true"
+            />
+          </van-grid>
+        </div>
+      </template>
+      <template v-else-if="ticket.status === '已完成' && isSubmitter">
+        <div class="submit-bar">
+          <van-grid
+            clickable
+            :column-num="1"
+          >
+            <van-grid-item
+              clickable
+              text="评价"
+              @click="showEvaluationTicketForm = true"
+            />
+          </van-grid>
+        </div>
+      </template>
+    </template>
+    <template v-else-if="isHelper">
+      <template v-if="ticket.status === '未接单' || ticket.status === '处理中'">
+        <div class="submit-bar">
+          <van-grid
+            clickable
+            :column-num="1"
+          >
+            <van-grid-item
+              clickable
+              text="回复"
+              @click="showReplayTicketForm = true"
+            />
+          </van-grid>
+        </div>
+      </template>
+    </template>
+    <template v-else-if="isSubmitter">
+      <template v-if="ticket.status === '未接单' || ticket.status === '处理中'">
+        <div class="submit-bar">
+          <van-grid
+            clickable
+            :column-num="1"
+          >
+            <van-grid-item
+              clickable
+              text="回复"
+              @click="showReplayTicketForm = true"
+            />
+          </van-grid>
+        </div>
+      </template>
+      <template v-else-if="ticket.status === '已完成'">
+        <div class="submit-bar">
+          <van-grid
+            clickable
+            :column-num="1"
+          >
+            <van-grid-item
+              clickable
+              text="评价"
+              @click="showEvaluationTicketForm = true"
+            />
+          </van-grid>
+        </div>
+      </template>
+    </template>
     <van-action-sheet
       v-model="showFinishTicketForm"
       title="处理工单"
@@ -283,7 +291,7 @@
           label="附件上传"
         >
           <template #input>
-            <van-uploader v-model="finishTicketForm.uploadFiles" />
+            <form-uploader v-model="finishTicketForm.fileList" />
           </template>
         </van-field>
         <div class="van-action-sheet__gap" />
@@ -316,12 +324,7 @@
           label="评分"
         >
           <template #input>
-            <van-rate
-              v-model="evaluationTicketForm.rate"
-              color="#ffd21e"
-              void-icon="star"
-              void-color="#eee"
-            />
+            <rate-text-selector v-model="evaluationTicketForm.rate" />
           </template>
         </van-field>
         <van-field
@@ -348,7 +351,7 @@
     </van-action-sheet>
     <van-action-sheet
       v-model="showReplayTicketForm"
-      title="处理工单"
+      title="回复工单"
     >
       <van-form @submit="onReplayTicketFormSubmit">
         <van-field
@@ -370,7 +373,7 @@
           label="附件上传"
         >
           <template #input>
-            <van-uploader v-model="replayTicketForm.uploadFiles" />
+            <form-uploader v-model="replayTicketForm.fileList" />
           </template>
         </van-field>
         <div class="van-action-sheet__gap" />
@@ -405,20 +408,22 @@ export default {
       finishTicketForm: {
         type: '',
         content: '',
-        uploadFiles: [{ url: 'https://img.yzcdn.cn/vant/leaf.jpg' }],
+        fileList: [],
       },
       // 评价表单
       showEvaluationTicketForm: false,
       evaluationTicketForm: {
-        rate: 5,
+        rate: 3,
         content: '',
       },
       // 评论表单
       showReplayTicketForm: false,
       replayTicketForm: {
         content: '',
-        uploadFiles: [{ url: 'https://img.yzcdn.cn/vant/leaf.jpg' }],
+        fileList: [],
       },
+      // Other
+      fromRouteName: null,
     };
   },
   computed: {
@@ -458,10 +463,23 @@ export default {
       return true;
     },
   },
+  beforeRouteEnter(to, from, next) {
+    next((vm) => {
+      // eslint-disable-next-line no-param-reassign
+      vm.fromRouteName = from.name;
+    });
+  },
   async created() {
     this.ticket = await this.fetchTicket({ uuid: this.$route.params.id });
   },
   methods: {
+    routerBack() {
+      if (this.fromRouteName) {
+        this.$router.back();
+      } else {
+        this.$router.replace({ name: 'index' });
+      }
+    },
     async updateTicket() {
       this.ticket = await this.fetchTicket({ uuid: this.$route.params.id });
       this.operationHistoryList = [];
@@ -472,23 +490,7 @@ export default {
     },
     async fetchTicket(params) {
       const response = await this.$axios.post('/api/malfunctionReporting/getMalfunctionReportingDetail', params);
-      return Object.assign(response.data.data, {
-        // candidate_supervisors: [{
-        //   USERID: 'DaiHuiKanWoLianSeHangShi',
-        //   apartmentCode: '1',
-        //   apartmentName: '天津实境科技有限公司',
-        //   avatar: 'http://wework.qpic.cn/bizmail/F335CVtyNWTeWcBpUPkw2TchpRytoaOOPIlYR1S23tQnicEpbJEo9Bw/0',
-        //   nickName: '待会看我脸色行事噢',
-        // }],
-        // principal: {
-        //   USERID: 'DaiHuiKanWoLianSeHangShi',
-        //   apartmentCode: '1',
-        //   apartmentName: '天津实境科技有限公司',
-        //   avatar: 'http://wework.qpic.cn/bizmail/F335CVtyNWTeWcBpUPkw2TchpRytoaOOPIlYR1S23tQnicEpbJEo9Bw/0',
-        //   nickName: '待会看我脸色行事噢',
-        // },
-        // status: '已评价',
-      });
+      return response.data.data;
     },
     async fetchOperationHistoryList(params) {
       const response = await this.$axios.post('/api/malfunctionReporting/getMalfunctionReportingOperationHistory', params);
@@ -537,6 +539,10 @@ export default {
       this.showFinishTicketTypePicker = false;
     },
     onFinishTicketFormSubmit(values) {
+      if (this.finishTicketForm.fileList.find((file) => file.status === 'uploading') !== undefined) {
+        this.$notify({ type: 'danger', message: '附件正在上传，请等待上传完成再试' });
+        return;
+      }
       if (this.isLoading) return;
       this.$dialog.confirm({
         title: '工单处理',
@@ -544,14 +550,24 @@ export default {
       }).then(async () => {
         try {
           this.isLoading = true;
+          const fileList = [];
+          for (let i = 0; i < values['附件'].length; i += 1) {
+            fileList.push({ media_id: values['附件'][i].mediaId, accessoryType: values['附件'][i].file.type });
+          }
           await this.$axios.post('/api/malfunctionReporting/approveMalfunctionReporting', {
             uuid: this.$route.params.id,
             content: values['处理详情'],
             result: values['处理结果'],
+            accessories_with_ids: fileList,
           });
           await this.updateTicket();
           this.$notify({ type: 'success', message: '工单已完成' });
           this.showFinishTicketForm = false;
+          this.finishTicketForm = {
+            type: '',
+            content: '',
+            fileList: [],
+          };
         } catch (e) {
           if (e.response.data && e.response.data.message) {
             this.$notify({ type: 'danger', message: e.response.data.message });
@@ -574,11 +590,15 @@ export default {
           await this.$axios.post('/api/malfunctionReporting/setRating', {
             uuid: this.$route.params.id,
             content: values['评价'],
-            rating: values['评分'],
+            rating: this.evaluationTicketForm.rate,
           });
           await this.updateTicket();
           this.$notify({ type: 'success', message: '评价成功' });
           this.showEvaluationTicketForm = false;
+          this.evaluationTicketForm = {
+            rate: 3,
+            content: '',
+          };
         } catch (e) {
           if (e.response.data && e.response.data.message) {
             this.$notify({ type: 'danger', message: e.response.data.message });
@@ -591,6 +611,10 @@ export default {
       }).catch(() => {});
     },
     onReplayTicketFormSubmit(values) {
+      if (this.replayTicketForm.fileList.find((file) => file.status === 'uploading') !== undefined) {
+        this.$notify({ type: 'danger', message: '附件正在上传，请等待上传完成再试' });
+        return;
+      }
       if (this.isLoading) return;
       this.$dialog.confirm({
         title: '提示',
@@ -598,13 +622,22 @@ export default {
       }).then(async () => {
         try {
           this.isLoading = true;
+          const fileList = [];
+          for (let i = 0; i < values['附件'].length; i += 1) {
+            fileList.push({ media_id: values['附件'][i].mediaId, accessoryType: values['附件'][i].file.type });
+          }
           await this.$axios.post('/api/malfunctionReporting/replyMalfunctionReporting', {
             uuid: this.$route.params.id,
             content: values['回复内容'],
+            accessories_with_ids: fileList,
           });
           await this.updateTicket();
           this.$notify({ type: 'success', message: '回复成功' });
           this.showReplayTicketForm = false;
+          this.replayTicketForm = {
+            content: '',
+            fileList: [],
+          };
         } catch (e) {
           if (e.response.data && e.response.data.message) {
             this.$notify({ type: 'danger', message: e.response.data.message });

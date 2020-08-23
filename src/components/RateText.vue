@@ -31,6 +31,7 @@ export default {
 
 <style lang="scss" scoped>
 .rate-text {
-  font-weight: 600;
+  font-weight: bolder;
+  color:rgba(51,51,51,1);
 }
 </style>

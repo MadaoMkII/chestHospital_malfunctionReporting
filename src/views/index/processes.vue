@@ -102,7 +102,6 @@ export default {
       filter: '全部',
       filterOptions: [
         { text: '全部', value: '全部' },
-        { text: '未分配', value: '未分配' },
         { text: '未接单', value: '未接单' },
         { text: '处理中', value: '处理中' },
         { text: '已完成', value: '已完成' },
