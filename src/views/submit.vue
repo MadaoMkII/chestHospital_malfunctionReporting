@@ -98,9 +98,12 @@
 </template>
 
 <script>
+import moment from 'moment';
+
 export default {
   data() {
     return {
+      dutyTelephones: null,
       showPriorityPicker: false,
       priorityPickerColumns: ['普通', '不紧急但重要', '紧急但不重要', '紧急且重要'],
     };
@@ -128,8 +131,41 @@ export default {
     }
     next();
   },
+  async mounted() {
+    this.dutyTelephones = await this.fetchDutyTelephones();
+    if (!this.isWorkTime()) this.showWorkTime();
+  },
   methods: {
+    async fetchDutyTelephones(params) {
+      const response = await this.$axios.get('/api/systemSetting/getMalfunctionReportingPhoneNumberByCategory', params);
+      return response.data.data;
+    },
+    isWorkTime() {
+      const start = moment().startOf('day').add(8, 'hours');
+      const end = moment().startOf('day').add(17, 'hours');
+      const over = moment().isBetween(start, end);
+      return over;
+    },
+    showWorkTime() {
+      this.$dialog({
+        title: '不在工作时间提示',
+        message: '您好，现在不在工作时间内，我们将在工作时间内第一时间查看并处理您的申报；如果紧急情况，您可以通过电话联系我们。',
+        confirmButtonText: `拨打${this.$route.query.department}值班电话`,
+        closeOnClickOverlay: true,
+      })
+        .then(() => {
+          // on confirm
+          window.open(`tel:${this.dutyTelephones[this.$route.query.department]}`);
+        })
+        .catch(() => {
+          // on cancel
+        });
+    },
     async onSubmit(values) {
+      if (!this.isWorkTime()) {
+        this.showWorkTime();
+        return;
+      }
       if (this.ticketForm.fileList.find((file) => file.status === 'uploading') !== undefined) {
         this.$notify({ type: 'danger', message: '附件正在上传，请等待上传完成再试' });
         return;

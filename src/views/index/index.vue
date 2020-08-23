@@ -5,6 +5,9 @@
       fixed
     />
     <base-page>
+      <button @click="logout">
+        Logout
+      </button>
       <!--      <button @click="getTest">-->
       <!--        Get Test-->
       <!--      </button>-->
@@ -154,6 +157,9 @@ export default {
         message: '报修申告处理完毕后，请务必填写评价，否则将无法再次申告，谢谢。',
         confirmButtonText: '知道啦',
       });
+    },
+    async logout() {
+      await this.$axios.get('/api/user/logout');
     },
     async clearTest() {
       const response = await this.$axios.get('/api/malfunctionReporting/getMalfunctionCatalog');
