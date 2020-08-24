@@ -162,10 +162,10 @@ export default {
         });
     },
     async onSubmit(values) {
-      if (!this.isWorkTime()) {
-        this.showWorkTime();
-        return;
-      }
+      // if (!this.isWorkTime()) {
+      //   this.showWorkTime();
+      //   return;
+      // }
       if (this.ticketForm.fileList.find((file) => file.status === 'uploading') !== undefined) {
         this.$notify({ type: 'danger', message: '附件正在上传，请等待上传完成再试' });
         return;
