@@ -22,7 +22,7 @@
       >
         <div class="list-uploaded-files__item__icon van-icon van-icon-video-o" />
         <div class="list-uploaded-files__item__name van-ellipsis">
-          {{ file.type }}
+          播放视频
         </div>
       </div>
       <div
@@ -43,6 +43,10 @@
       @click="isShowVideo = false"
       z-index="99"
     >
+      <i
+        class="van-icon van-icon-clear van-image-preview__close-icon van-image-preview__close-icon--top-right"
+        @click="isShowVideo = false"
+      />
       <div
         v-if="isShowVideo"
         class="video-container"
@@ -102,7 +106,7 @@ export default {
       return file.type === 'video/quicktime' || file.type === 'video/mp4';
     },
     imagePreview(file) {
-      ImagePreview([this.getFileURL(file)]);
+      ImagePreview({ images: [this.getFileURL(file)], closeable: true });
     },
     videoPreview(file) {
       this.isShowVideo = true;
@@ -153,5 +157,14 @@ export default {
   align-items: center;
   justify-content: center;
   height: 100%;
+
+  &__close {
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    color: #fff;
+    font-size: 24px;
+    z-index: 9999;
+  }
 }
 </style>

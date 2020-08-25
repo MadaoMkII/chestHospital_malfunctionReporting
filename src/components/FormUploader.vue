@@ -1,14 +1,55 @@
 <template>
-  <van-uploader
-    v-model="fileList"
-    multiple
-    :max-count="3"
-    :max-size="1000000 * 20"
-    accept=".mp4, .mov, .png, .jpg, .jpeg, .pdf, .doc, .docx, .xls, .xlsx, .txt, .ppt, .pptx"
-    upload-icon="add-o"
-    @oversize="onOversize"
-    :after-read="afterRead"
-  />
+  <div>
+    <van-uploader
+      v-model="fileList"
+      multiple
+      :max-count="3"
+      :max-size="1000000 * 20"
+      accept=".mp4, .mov, .png, .jpg, .jpeg, .pdf, .doc, .docx, .xls, .xlsx, .txt, .ppt, .pptx"
+      upload-icon="add-o"
+      @oversize="onOversize"
+      :after-read="afterRead"
+      @click-preview="filePreview"
+      :preview-options="{ closeable: true }"
+    >
+      <template #preview-cover="{ file }">
+        <template v-if="isVideoFile(file)">
+          <div class="van-uploader__file">
+            <i class="van-icon van-icon-video-o van-uploader__file-icon"></i>
+            <div class="van-uploader__file-name van-ellipsis">{{ file.name }}</div>
+          </div>
+        </template>
+      </template>
+    </van-uploader>
+    <van-overlay
+      ref="videoPreview"
+      :show="isShowVideo"
+      @click="isShowVideo = false"
+      z-index="99"
+    >
+      <i
+        class="van-icon van-icon-clear van-image-preview__close-icon van-image-preview__close-icon--top-right"
+        @click="isShowVideo = false"
+      />
+      <div
+        v-if="isShowVideo"
+        class="video-container"
+        @click="isShowVideo = false"
+      >
+        <video
+          controls
+          width="100%"
+          @click.stop
+        >
+          <source
+            :src="videoURL"
+            type="video/mp4"
+          >
+          Sorry, your browser doesn't support embedded videos.
+        </video>
+      </div>
+    </van-overlay>
+  </div>
 </template>
 
 <script>
@@ -21,6 +62,12 @@ export default {
       required: true,
     },
   },
+  data() {
+    return {
+      isShowVideo: false,
+      videoURL: null,
+    };
+  },
   computed: {
     fileList: {
       get() {
@@ -31,7 +78,31 @@ export default {
       },
     },
   },
+  mounted() {
+    document.body.insertBefore(this.$refs.videoPreview, document.body.lastChild);
+  },
   methods: {
+    videoPreview(file) {
+      const reader = new FileReader();
+
+      // eslint-disable-next-line func-names
+      reader.addEventListener('load', () => {
+        this.isShowVideo = true;
+        // convert image file to base64 string
+        this.videoURL = reader.result;
+        console.log('ok');
+      }, false);
+
+      reader.readAsDataURL(file);
+    },
+    isVideoFile(file) {
+      return file.type === 'video/quicktime' || file.type === 'video/mp4';
+    },
+    filePreview(file) {
+      if (this.isVideoFile(file.file)) {
+        this.videoPreview(file.file);
+      }
+    },
     onOversize() {
       Toast('文件大小不能超过 20MB');
     },
@@ -87,3 +158,21 @@ export default {
   },
 };
 </script>
+
+<style lang="scss" scoped>
+.video-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+
+  &__close {
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    color: #fff;
+    font-size: 24px;
+    z-index: 9999;
+  }
+}
+</style>
