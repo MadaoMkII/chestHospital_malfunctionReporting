@@ -15,8 +15,10 @@
       <template #preview-cover="{ file }">
         <template v-if="isVideoFile(file)">
           <div class="van-uploader__file">
-            <i class="van-icon van-icon-video-o van-uploader__file-icon"></i>
-            <div class="van-uploader__file-name van-ellipsis">{{ file.name }}</div>
+            <i class="van-icon van-icon-video-o van-uploader__file-icon" />
+            <div class="van-uploader__file-name van-ellipsis">
+              播放视频
+            </div>
           </div>
         </template>
       </template>
@@ -90,13 +92,14 @@ export default {
         this.isShowVideo = true;
         // convert image file to base64 string
         this.videoURL = reader.result;
-        console.log('ok');
       }, false);
 
       reader.readAsDataURL(file);
     },
     isVideoFile(file) {
-      return file.type === 'video/quicktime' || file.type === 'video/mp4';
+      const types = ['mp4', 'mov'];
+      const type = file.name.split('.').pop().toLowerCase();
+      return types.includes(type);
     },
     filePreview(file) {
       if (this.isVideoFile(file.file)) {
@@ -136,6 +139,8 @@ export default {
             file.status = 'done';
             // eslint-disable-next-line no-param-reassign
             file.mediaId = response.data.media_id;
+            // eslint-disable-next-line no-param-reassign
+            file.type = file.file.name.split('.').pop().toLowerCase();
             break;
           default:
             // eslint-disable-next-line no-param-reassign

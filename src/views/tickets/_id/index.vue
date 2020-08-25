@@ -567,7 +567,7 @@ export default {
           this.isLoading = true;
           const fileList = [];
           for (let i = 0; i < values['附件'].length; i += 1) {
-            fileList.push({ media_id: values['附件'][i].mediaId, accessoryType: values['附件'][i].file.type });
+            fileList.push({ media_id: values['附件'][i].mediaId, accessoryType: values['附件'][i].type });
           }
           await this.$axios.post('/api/malfunctionReporting/approveMalfunctionReporting', {
             uuid: this.$route.params.id,
@@ -639,7 +639,7 @@ export default {
           this.isLoading = true;
           const fileList = [];
           for (let i = 0; i < values['附件'].length; i += 1) {
-            fileList.push({ media_id: values['附件'][i].mediaId, accessoryType: values['附件'][i].file.type });
+            fileList.push({ media_id: values['附件'][i].mediaId, accessoryType: values['附件'][i].type });
           }
           await this.$axios.post('/api/malfunctionReporting/replyMalfunctionReporting', {
             uuid: this.$route.params.id,

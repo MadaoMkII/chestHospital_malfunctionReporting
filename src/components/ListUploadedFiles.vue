@@ -33,7 +33,7 @@
       >
         <div class="list-uploaded-files__item__icon van-icon van-icon-description" />
         <div class="list-uploaded-files__item__name van-ellipsis">
-          {{ file.type }}
+          {{ file.type }} 文件
         </div>
       </div>
     </template>
@@ -100,10 +100,12 @@ export default {
       return `/wx-api/cgi-bin/media/get?access_token=${this.accessToken}&media_id=${file.mediaId}`;
     },
     isImageFile(file) {
-      return file.type === 'image/jpeg' || file.type === 'image/png';
+      const types = ['png', 'jpg', 'jpeg'];
+      return types.includes(file.type);
     },
     isVideoFile(file) {
-      return file.type === 'video/quicktime' || file.type === 'video/mp4';
+      const types = ['mp4', 'mov'];
+      return types.includes(file.type);
     },
     imagePreview(file) {
       ImagePreview({ images: [this.getFileURL(file)], closeable: true });
@@ -130,7 +132,9 @@ export default {
     width: 80px;
     height: 80px;
     margin: 0 8px 8px 0;
-    background-color: #f7f8fa;
+    background-color: #f2f3f5;
+    border-radius: 3px;
+    overflow: hidden;
 
     &__icon {
       color: #646566;
