@@ -5,9 +5,9 @@
       fixed
     />
     <base-page>
-      <button @click="logout">
-        Logout
-      </button>
+      <!--      <button @click="logout">-->
+      <!--        Logout-->
+      <!--      </button>-->
       <!--      <button @click="getTest">-->
       <!--        Get Test-->
       <!--      </button>-->

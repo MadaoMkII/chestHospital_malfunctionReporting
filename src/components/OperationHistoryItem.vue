@@ -69,6 +69,15 @@
         </div>
         <div class="opt-history-item__replay">
           {{ data.detail.content }}
+          <div
+            v-if="data.detail.accessories && data.detail.accessories.length > 0 && accessToken"
+            style="margin-top: 8px"
+          >
+            <list-uploaded-files
+              :access-token="accessToken"
+              :data="data.detail.accessories"
+            />
+          </div>
         </div>
       </template>
       <template v-else-if="data.action === '处理'">
@@ -87,6 +96,15 @@
             {{ data.detail.result }}
           </div><br>
           {{ data.detail.content }}
+          <div
+            v-if="data.detail.accessories && data.detail.accessories.length > 0 && accessToken"
+            style="margin-top: 8px"
+          >
+            <list-uploaded-files
+              :access-token="accessToken"
+              :data="data.detail.accessories"
+            />
+          </div>
         </div>
       </template>
       <template v-else-if="data.action === '满意度评价'">
@@ -130,6 +148,10 @@ export default {
   props: {
     data: {
       type: Object,
+      required: true,
+    },
+    accessToken: {
+      type: String,
       required: true,
     },
   },

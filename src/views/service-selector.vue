@@ -89,6 +89,10 @@ export default {
     },
     confirm() {
       const selectedService = this.serviceList.find((service) => service.id === this.selectedService);
+      if (selectedService.principalsUserId.length === 0) {
+        this.$notify({ type: 'danger', message: '当前服务项目暂无负责人，暂时不能选择' });
+        return;
+      }
       this.ticketForm.service = selectedService === undefined ? null : selectedService;
       this.$router.go(-this.deep);
     },

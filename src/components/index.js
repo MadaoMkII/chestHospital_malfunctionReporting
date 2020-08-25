@@ -6,6 +6,7 @@ import OperationHistoryItem from './OperationHistoryItem.vue';
 import RateText from './RateText.vue';
 import FormUploader from './FormUploader.vue';
 import RateTextSelector from './RateTextSelector.vue';
+import ListUploadedFiles from './ListUploadedFiles.vue';
 
 Vue.component('BasePage', BasePage);
 Vue.component('TicketItem', TicketItem);
@@ -14,6 +15,7 @@ Vue.component('OperationHistoryItem', OperationHistoryItem);
 Vue.component('RateText', RateText);
 Vue.component('FormUploader', FormUploader);
 Vue.component('RateTextSelector', RateTextSelector);
+Vue.component('ListUploadedFiles', ListUploadedFiles);
 
 export {
   BasePage,
@@ -23,6 +25,7 @@ export {
   RateText,
   FormUploader,
   RateTextSelector,
+  ListUploadedFiles,
 };
 
 export default {
@@ -33,4 +36,5 @@ export default {
   RateText,
   FormUploader,
   RateTextSelector,
+  ListUploadedFiles,
 };

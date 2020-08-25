@@ -17,7 +17,7 @@
         <div class="ticket-card__header van-hairline--bottom">
           {{ ticket.title }}
         </div>
-        <div class="ticket-card__body">
+        <div class="ticket-card__body ticket-card__body--padding">
           <div class="ticket-item">
             <div class="ticket-item__label">
               提交人
@@ -58,6 +58,15 @@
               {{ ticket.content }}
             </div>
           </div>
+          <div
+            v-if="ticket.accessories && ticket.accessories.length > 0 && accessToken"
+            class="ticket-item ticket-item--full"
+          >
+            <list-uploaded-files
+              :access-token="accessToken"
+              :data="ticket.accessories"
+            />
+          </div>
         </div>
       </div>
       <div class="ticket-card">
@@ -85,6 +94,7 @@
                 v-for="(operationHistory, i) in operationHistoryList"
                 :key="i"
                 :data="operationHistory"
+                :access-token="accessToken"
               />
             </div>
           </van-list>
@@ -424,6 +434,7 @@ export default {
       },
       // Other
       fromRouteName: null,
+      accessToken: null,
     };
   },
   computed: {
@@ -471,6 +482,7 @@ export default {
   },
   async created() {
     this.ticket = await this.fetchTicket({ uuid: this.$route.params.id });
+    this.accessToken = await this.fetchAccessToken();
   },
   methods: {
     routerBack() {
@@ -491,6 +503,9 @@ export default {
     async fetchTicket(params) {
       const response = await this.$axios.post('/api/malfunctionReporting/getMalfunctionReportingDetail', params);
       return response.data.data;
+    },
+    async fetchAccessToken() {
+      return (await this.$axios.get('/api/user/getToken')).data.data;
     },
     async fetchOperationHistoryList(params) {
       const response = await this.$axios.post('/api/malfunctionReporting/getMalfunctionReportingOperationHistory', params);
@@ -558,7 +573,7 @@ export default {
             uuid: this.$route.params.id,
             content: values['处理详情'],
             result: values['处理结果'],
-            accessories_with_ids: fileList,
+            media_ids: fileList,
           });
           await this.updateTicket();
           this.$notify({ type: 'success', message: '工单已完成' });
@@ -629,7 +644,7 @@ export default {
           await this.$axios.post('/api/malfunctionReporting/replyMalfunctionReporting', {
             uuid: this.$route.params.id,
             content: values['回复内容'],
-            accessories_with_ids: fileList,
+            media_ids: fileList,
           });
           await this.updateTicket();
           this.$notify({ type: 'success', message: '回复成功' });
@@ -669,13 +684,17 @@ export default {
   }
   &__body {
     background-color: #fff;
+
+    &--padding {
+      padding: 5px 0;
+    }
   }
 }
 
 .ticket-item {
   $self: &;
 
-  padding: 10px 16px;
+  padding: 5px 16px;
   display: flex;
 
   &__label {
