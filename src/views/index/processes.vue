@@ -1,17 +1,30 @@
 <template>
   <div>
     <van-nav-bar
-      title="我的"
+      title="处理"
       fixed
     />
     <base-page>
-      <van-search
-        class="sticky-searchbar searchbar__search"
-        v-model="keywords"
-        placeholder="请输入搜索关键词"
-        @search="onSearch"
-        @clear="onSearch"
-      />
+      <div class="sticky-searchbar searchbar">
+        <van-search
+          class="searchbar__search"
+          v-model="keywords"
+          placeholder="请输入搜索关键词"
+          @search="onSearch"
+          @clear="onSearch"
+        />
+        <van-dropdown-menu class="searchbar__dropdown-menu custom-dropdown-menu">
+          <van-dropdown-item
+            v-model="filter"
+            :options="filterOptions"
+            @change="onFilterChange"
+          >
+            <template #title>
+              <van-icon name="filter-o" />
+            </template>
+          </van-dropdown-item>
+        </van-dropdown-menu>
+      </div>
       <van-tabs
         class="sticky-tabs"
         v-model="tab"
@@ -20,8 +33,8 @@
         @click="onTabClick"
       >
         <van-tab
-          title="全部"
-          name="全部"
+          title="指派给我"
+          name="指派给我"
         >
           <van-pull-refresh
             v-model="refreshing"
@@ -45,83 +58,8 @@
           />
         </van-tab>
         <van-tab
-          title="处理中"
-          name="处理中"
-        >
-          <van-pull-refresh
-            v-model="refreshing"
-            @refresh="onListRefresh"
-          >
-            <van-list
-              v-model="loading"
-              :finished="finished"
-              @load="onListLoad"
-            >
-              <ticket-item
-                v-for="item in list"
-                :key="item.uuid"
-                :data="item"
-              />
-            </van-list>
-          </van-pull-refresh>
-          <van-empty
-            v-if="total === 0 && isDirty"
-            description="暂无数据"
-          />
-        </van-tab>
-        <van-tab
-          title="已完成"
-          name="已完成"
-        >
-          <van-pull-refresh
-            v-model="refreshing"
-            @refresh="onListRefresh"
-          >
-            <van-list
-              v-model="loading"
-              :finished="finished"
-              @load="onListLoad"
-            >
-              <ticket-item
-                v-for="item in list"
-                :key="item.uuid"
-                :data="item"
-              />
-            </van-list>
-          </van-pull-refresh>
-          <van-empty
-            v-if="total === 0 && isDirty"
-            description="暂无数据"
-          />
-        </van-tab>
-        <van-tab
-          title="已评价"
-          name="已评价"
-        >
-          <van-pull-refresh
-            v-model="refreshing"
-            @refresh="onListRefresh"
-          >
-            <van-list
-              v-model="loading"
-              :finished="finished"
-              @load="onListLoad"
-            >
-              <ticket-item
-                v-for="item in list"
-                :key="item.uuid"
-                :data="item"
-              />
-            </van-list>
-          </van-pull-refresh>
-          <van-empty
-            v-if="total === 0 && isDirty"
-            description="暂无数据"
-          />
-        </van-tab>
-        <van-tab
-          title="已关闭"
-          name="已关闭"
+          title="我的协作"
+          name="我的协作"
         >
           <van-pull-refresh
             v-model="refreshing"
@@ -161,12 +99,24 @@ export default {
       finished: false,
       isDirty: false,
       keywords: '',
+      filter: '全部',
+      filterOptions: [
+        { text: '全部', value: '全部' },
+        { text: '未接单', value: '未接单' },
+        { text: '处理中', value: '处理中' },
+        { text: '已完成', value: '已完成' },
+        { text: '已评价', value: '已评价' },
+        { text: '已关闭', value: '已关闭' },
+      ],
       tab: '指派给我',
     };
   },
   created() {
     if (this.$route.query.keywords) {
       this.keywords = this.$route.query.keywords;
+    }
+    if (this.$route.query.filter) {
+      this.filter = this.$route.query.filter;
     }
     if (this.$route.query.tab) {
       this.tab = this.$route.query.tab;
@@ -176,6 +126,9 @@ export default {
     if (to.query.keywords) {
       this.keywords = to.query.keywords;
     }
+    if (to.query.filter) {
+      this.filter = to.query.filter;
+    }
     if (to.query.tab) {
       this.tab = to.query.tab;
     }
@@ -183,17 +136,49 @@ export default {
   },
   methods: {
     async fetchList(params) {
-      const response = await this.$axios.post('/api/malfunctionReporting/getMyMalfunctionReportingList', params);
+      const response = await this.$axios.post('/api/malfunctionReporting/getMalfunctionReportingList', params);
       return {
         data: response.data.data,
         total: response.data.totalCount,
       };
     },
+    onFilterChange() {
+      this.list = [];
+      this.page = 1;
+      this.loading = true;
+      this.finished = false;
+      this.isDirty = false;
+      this.$router.push({
+        name: 'processes',
+        query: {
+          keywords: this.keywords ? this.keywords : undefined,
+          filter: this.filter,
+          tab: this.tab,
+        },
+      });
+      setTimeout(() => {
+        this.onListLoad();
+      }, 500);
+    },
     async onListLoad() {
+      let role = '';
+      switch (this.tab) {
+        case '指派给我':
+          role = '负责';
+          break;
+        case '我的协作':
+          role = '协助';
+          break;
+        default:
+          role = '';
+          break;
+      }
+
       const { data, total } = await this.fetchList({
         unit: 15,
         page: this.page,
-        status: this.tab,
+        role,
+        status: this.filter,
         title: this.keywords ? this.keywords : undefined,
       });
       if (this.refreshing) {
@@ -215,9 +200,10 @@ export default {
       this.loading = true;
       this.finished = false;
       this.$router.push({
-        name: 'my',
+        name: 'processes',
         query: {
           keywords: this.keywords ? this.keywords : undefined,
+          filter: this.filter,
           tab: this.tab,
         },
       }).catch(() => {});
@@ -230,9 +216,10 @@ export default {
       this.finished = false;
       this.isDirty = false;
       this.$router.push({
-        name: 'my',
+        name: 'processes',
         query: {
           keywords: this.keywords ? this.keywords : undefined,
+          filter: this.filter,
           tab: this.tab,
         },
       }).catch(() => {});
@@ -250,9 +237,10 @@ export default {
     },
     onTabClick() {
       this.$router.push({
-        name: 'my',
+        name: 'processes',
         query: {
           keywords: this.keywords ? this.keywords : undefined,
+          filter: this.filter,
           tab: this.tab,
         },
       }).catch(() => {});

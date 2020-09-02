@@ -17,8 +17,13 @@ const routes = [
       },
       {
         path: 'my',
-        name: 'index-my',
+        name: 'my',
         component: () => import('../views/index/my.vue'),
+      },
+      {
+        path: 'processes',
+        name: 'processes',
+        component: () => import('../views/index/processes.vue'),
       },
     ],
   },
@@ -31,6 +36,31 @@ const routes = [
     path: '/test',
     name: 'test',
     component: () => import('../views/test.vue'),
+  },
+  {
+    path: '/submit',
+    name: 'submit',
+    component: () => import('../views/submit.vue'),
+  },
+  {
+    path: '/service-selector',
+    name: 'service-selector',
+    component: () => import('../views/service-selector.vue'),
+  },
+  {
+    path: '/tickets/:id',
+    name: 'tickets-id',
+    component: () => import('../views/tickets/_id/index.vue'),
+  },
+  {
+    path: '/tickets/:id/cooperation-user-selector/:departmentId',
+    name: 'tickets-id-cooperation-user-selector-department-id',
+    component: () => import('../views/tickets/_id/cooperation-user-selector/_departmentId.vue'),
+  },
+  {
+    path: '/tickets/:id/principal-user-selector/:departmentId',
+    name: 'tickets-id-principal-user-selector-department-id',
+    component: () => import('../views/tickets/_id/principal-user-selector/_departmentId.vue'),
   },
 ];
 

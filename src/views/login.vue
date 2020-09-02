@@ -10,7 +10,7 @@ export default {
   mounted() {
     const url = new URL(this.config.redirectUrl);
     if (this.$route.query.redirect) {
-      url.searchParams.append('redirectURL', `/evaluation${this.$route.query.redirect}`);
+      url.searchParams.append('redirectURL', `/malfunctionReporting${this.$route.query.redirect}`);
     }
     window.location = `https://open.weixin.qq.com/connect/oauth2/authorize?${new URLSearchParams({
       appid: this.config.corpId,
