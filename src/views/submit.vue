@@ -142,7 +142,7 @@ export default {
     },
     isWorkTime() {
       const start = moment().startOf('day').add(8, 'hours');
-      const end = moment().startOf('day').add(17, 'hours');
+      const end = moment().startOf('day').add(17, 'hours').add(30, 'minutes');
       const over = moment().isBetween(start, end);
       return over;
     },
